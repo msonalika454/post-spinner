@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Post Spinner</title>
+  <meta name="description" content="A head full of ideas. Nothing to post. One wheel that picks today's format, topic and hook.">
+  <meta name="theme-color" content="#D9531E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%231B1B1B'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23D9531E'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Sans:wght@400..700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Runs before first paint so high contrast never flashes the default theme. -->
+  <script>
+    try {
+      if (localStorage.getItem("postSpinner.highContrast") === "1") {
+        document.documentElement.dataset.contrast = "high";
+      }
+    } catch (e) { /* storage blocked: default theme */ }
+  </script>
+</head>
+<body>
+  <main>
+    <section class="tool" id="top" aria-label="Post Spinner wheel">
+      <div class="tool-head">
+        <header class="bar">
+          <h1 class="wordmark">Post Spinner</h1>
+          <div class="bar-controls">
+            <button id="sound" class="btn btn--small" type="button" aria-pressed="true">Sound</button>
+            <button id="contrast" class="btn btn--small" type="button" aria-pressed="false">High contrast</button>
+          </div>
+        </header>
+
+        <p id="data-error" class="data-error" role="alert" hidden></p>
+
+        <div id="result" class="result">
+          <p class="headline is-empty"><span class="visually-hidden">Hook: </span><span id="value-hook">A head full of ideas. Nothing to post.</span></p>
+          <p class="tags">
+            <span class="tag tag--format is-empty"><span class="visually-hidden">Format: </span><span id="value-format">Format</span></span>
+            <span class="tag tag--topic is-empty"><span class="visually-hidden">Topic: </span><span id="value-topic">Topic</span></span>
+          </p>
+        </div>
+
+        <div class="locks" role="group" aria-label="Keep a ring in place">
+          <button class="btn btn--small lock" data-key="format" type="button" aria-pressed="false">Lock format</button>
+          <button class="btn btn--small lock" data-key="topic" type="button" aria-pressed="false">Lock topic</button>
+          <button class="btn btn--small lock" data-key="hook" type="button" aria-pressed="false">Lock hook</button>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-inner">
+          <div id="wheel" class="wheel" aria-hidden="true"></div>
+          <div id="pointer" class="pointer" aria-hidden="true"></div>
+          <button id="spin" class="hub" type="button">Spin</button>
+        </div>
+      </div>
+
+      <div class="tool-foot">
+        <div class="actions">
+          <button id="save" class="btn" type="button">Save</button>
+          <button id="copy" class="btn" type="button">Copy</button>
+          <button id="undo" class="btn" type="button">Undo</button>
+        </div>
+        <fieldset class="filters">
+          <legend class="visually-hidden">Niche</legend>
+          <div id="chips" class="chips"></div>
+        </fieldset>
+        <p class="hint">Press Space or Enter to spin.</p>
+      </div>
+    </section>
+
+    <section class="saved" aria-label="Your ideas">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 id="favorites-heading" class="panel-title" tabindex="-1">Favorites <span id="favorites-count" class="count">0</span></h2>
+          <button id="copy-all" class="btn btn--small" type="button">Copy all</button>
+        </div>
+        <p id="favorites-empty" class="empty">Nothing saved yet. Spin, then press Save.</p>
+        <ul id="favorites" class="list"></ul>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Last 5 spins</h2>
+        </div>
+        <p id="recent-empty" class="empty">Earlier spins show up here. Tap one to bring it back.</p>
+        <ul id="recent" class="list"></ul>
+      </div>
+    </section>
+
+    <div class="ticker" aria-hidden="true"><div id="ticker" class="ticker-track"></div></div>
+
+    <article class="story">
+      <section class="story-open">
+        <h2 class="reveal">A closet full of clothes. Nothing to wear.</h2>
+        <p class="reveal">Every creator knows the morning version of this. The phone is charged, the light is good, and the draft stays empty. The ideas aren't missing. There are just too many to pick from.</p>
+      </section>
+
+      <section class="story-turn">
+        <h2 class="reveal">The hard part is choosing.</h2>
+        <p class="reveal">So the wheel chooses. One button, no menus, no blank page. Spin, and the decision is already made.</p>
+      </section>
+
+      <section class="story-dress">
+        <div class="story-wheel-wrap" aria-hidden="true"><div id="story-wheel" class="story-wheel"></div></div>
+        <div class="story-dress-copy">
+          <h2 class="reveal">Get dressed in three turns.</h2>
+          <dl>
+            <div class="reveal"><dt>Format</dt><dd>The cut. Reel, carousel, story, post or live.</dd></div>
+            <div class="reveal"><dt>Topic</dt><dd>The fabric. What the post is made of.</dd></div>
+            <div class="reveal"><dt>Hook</dt><dd>The statement piece. The line people stop for.</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="story-keep">
+        <h2 class="reveal">Love the jacket? Keep the jacket.</h2>
+        <p class="reveal">Lock the ring you like and spin the rest, the way you'd keep one piece and change the shoes. Changed your mind? Undo takes you back.</p>
+      </section>
+
+      <section class="story-close">
+        <h2 class="reveal">Now post it.</h2>
+        <button id="story-spin" class="btn btn--big" type="button">Spin</button>
+      </section>
+    </article>
+  </main>
+
+  <footer class="foot">
+    <p>Post Spinner. An HCI course project.</p>
+  </footer>
+
+  <!-- Screen reader announcement of each result. Visually hidden. -->
+  <div id="announcer" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true">
+    <span id="toast-text"></span>
+    <button id="toast-action" class="toast-action" type="button" hidden>Undo</button>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
